@@ -1,23 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Category;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
-        $products = Product::with('category')->get();
+        $categories = Category::all();
         return response()->json([
             'status' => 'true',
-            'massages' => 'data retrieved successfully',
-            'data' => $products
+            'massages' => 'category retrieved successfully',
+            'data' => $categories
         ]);
     }
 
@@ -27,18 +26,15 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|integer'
+            'name' => 'required|string'
         ]);
 
-        $product = Product::create($request->all());
+        $category = Category::create($request->all());
 
         return response()->json([
             'status' => 'true',
-            'massages' => 'data created successfully',
-            'data' => $product
+            'massages' => 'category created successfully',
+            'data' => $category
         ], 201);
     }
 
@@ -47,19 +43,19 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Product::with('category')->find($id);
+        $category = Category::find($id);
 
-        if (!$product) {
+        if (!$category) {
             return response()->json([
                 'status' => 'false',
-                'massages' => 'data not found'
+                'massages' => 'category not found'
             ], 404);
         }
 
         return response()->json([
             'status' => 'true',
-            'massages' => 'data retrieved successfully',
-            'data' => $product
+            'massages' => 'category retrieved successfully',
+            'data' => $category
         ]);
     }
 
@@ -69,26 +65,24 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'sometimes|required|string',
-            'description' => 'sometimes|nullable|string',
-            'price' => 'sometimes|required|integer'
+            'name' => 'sometimes|required|string'
         ]);
 
-        $product = Product::find($id);
+        $category = Category::find($id);
 
-        if (!$product) {
+        if (!$category) {
             return response()->json([
                 'status' => 'false',
-                'massages' => 'data not found'
+                'massages' => 'category not found'
             ], 404);
         }
 
-        $product->update($request->all());
+        $category->update($request->all());
 
         return response()->json([
             'status' => 'true',
-            'massages' => 'data updated successfully',
-            'data' => $product
+            'massages' => 'category updated successfully',
+            'data' => $category
         ]);
     }
 
@@ -97,20 +91,20 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::find($id);
+        $category = Category::find($id);
 
-        if (!$product) {
+        if (!$category) {
             return response()->json([
                 'status' => 'false',
-                'massages' => 'data not found'
+                'massages' => 'category not found'
             ], 404);
         }
 
-        $product->delete();
+        $category->delete();
 
         return response()->json([
             'status' => 'true',
-            'massages' => 'data deleted successfully'
+            'massages' => 'category deleted successfully'
         ]);
     }
 }
